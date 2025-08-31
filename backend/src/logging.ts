@@ -14,6 +14,11 @@ export function log(message: string, level: LogLevel) {
     }
 }
 
+export async function httpError(message: string, response: Response, errorLevel: LogLevel = 2, detailLevel: LogLevel = 5) {
+    log(`${message}: ${response.status} ${response.statusText} ${response.text}`, errorLevel);
+    log(await response.json(),detailLevel);
+}
+
 // Setting log level
 const ENV_LEVEL = process.env.LOG_LEVEL;
 const LOG_LEVEL = Number(ENV_LEVEL) || 5;
