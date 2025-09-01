@@ -33,6 +33,7 @@ async function fetchGocardless(url: string, method: "GET"|"POST"|"DELETE"|"PUT",
         return await fetchGocardless(url, method, body);
     } else {
         httpError("Error while fetching from Gocardless API", response);
+        return;
     }
 }
 
