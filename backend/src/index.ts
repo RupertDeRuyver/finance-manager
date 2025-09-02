@@ -2,10 +2,15 @@ import dotenv from "dotenv";
 dotenv.config();
 import express, { Request, Response } from "express";
 const app = express()
+import cors from "cors";
 
 import {updateAllTokens, getAvailableBanks, createRequisition, getRequisition, requisition_statuses} from "./bankAPI";
 import {db, prepareDB, updateAllTransactions} from "./db";
 import {endWithMessage, log} from "./logging";
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+}));
 
 app.get('/available-banks', async (req: Request, res: Response) => {
     log(`Received available banks request from ${req.ip}`, 5);
