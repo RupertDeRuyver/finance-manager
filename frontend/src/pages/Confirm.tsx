@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const BACKEND_URL = "http://localhost:3000";
@@ -18,9 +18,16 @@ function Confirm() {
     }
   });
   return (
-    <>
-      <Typography>Connecting account...</Typography>
-    </>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh" // full screen
+    >
+      <CircularProgress size={80}/>
+      <Typography variant="h5" sx={{ mt: 2 }}>Connecting account...</Typography>
+    </Box>
   );
 }
 

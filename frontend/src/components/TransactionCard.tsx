@@ -21,22 +21,22 @@ function TransactionCard({ name, category, amount }: Props) {
           <Container>
             <Grid container spacing={2}>
               <Grid size={2}>
-                <Typography variant="h6" align="center">
+                <Typography align="center">
                   {category}
                 </Typography>
               </Grid>
               <Grid size={8}>
-                <Typography variant="h6" align="center">
+                <Typography align="center">
                   {name}
                 </Typography>
               </Grid>
               <Grid size={2}>
                 {amount < 0 ? (
-                  <Typography variant="h6" align="center" color="error">
+                  <Typography align="center" color="error">
                     -€{-amount}
                   </Typography>
                 ) : (
-                  <Typography variant="h6" align="center" color="success">
+                  <Typography align="center" color="success">
                     +€{amount}
                   </Typography>
                 )}
