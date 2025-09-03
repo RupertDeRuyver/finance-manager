@@ -76,7 +76,7 @@ app.get("/confirm-requisition", async (req, res) => {
 app.get("/update-transactions", async (req, res) => {
     log(`Received update transactions request from ${req.ip}`, 5);
     const user_id = Number(req.query.user_id)
-    if (typeof user_id !== "number") {
+    if (Number.isNaN(user_id)) {
         endWithMessage("Didn't receive a valid user id", res, 400);
         return
     }
@@ -88,6 +88,19 @@ app.get("/update-transactions", async (req, res) => {
             endWithMessage(`Failed to update transactions for user with id ${user_id}`, res, 500, 2);
             return
         }
+    });
+})
+
+app.get("/get-transactions", async (req, res) => {
+    log(`Received get transactions request from ${req.ip}`, 5);
+    const user_id = Number(req.query.user_id)
+    if (Number.isNaN(user_id)) {
+        endWithMessage("Didn't receive a valid user id", res, 400);
+        return
+    }
+    db.selectFrom("transactions").where("userId","=",user_id).where("deleted","=",false).selectAll().execute().then((json) => {
+        res.json(json);
+        log(`Succesfully returned transactions for user with id ${user_id} to ${req.ip}`,5);
     });
 })
 
