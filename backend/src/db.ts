@@ -93,7 +93,7 @@ export async function prepareDB(): Promise<boolean> {
   }
 }
 
-export async function updateAllTransactions(userId: number): Promise<boolean> {
+export async function updateTransactions(userId: number): Promise<boolean> {
   log("Updating transactions for user " + userId, 5);
   const result = await db.selectFrom("users").where("userId","=",userId).select("account_id").executeTakeFirst();
   if (!result) {

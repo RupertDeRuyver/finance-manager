@@ -5,7 +5,7 @@ const app = express()
 import cors from "cors";
 
 import {updateAllTokens, getAvailableBanks, createRequisition, getRequisition, requisition_statuses} from "./bankAPI";
-import {db, prepareDB, updateAllTransactions} from "./db";
+import {db, prepareDB, updateTransactions} from "./db";
 import {endWithMessage, log} from "./logging";
 
 app.use(cors({
@@ -80,7 +80,7 @@ app.get("/update-transactions", async (req, res) => {
         endWithMessage("Didn't receive a valid user id", res, 400);
         return
     }
-    updateAllTransactions(user_id).then((success) => {
+    updateTransactions(user_id).then((success) => {
         if (success) {
             endWithMessage(`Succesfully updated all transactions for user with id ${user_id}`, res, 200, 5);
             return
