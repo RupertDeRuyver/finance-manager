@@ -12,9 +12,9 @@ function Confirm() {
     `${BACKEND_URL}/confirm-requisition?requisition_id=${requisition_id}`
   ).then((response) => {
     if (response.ok) {
-      navigate("/?link-success=true");
+      navigate("/home?link-success=true");
     } else {
-      navigate("/?link-success=false");
+      navigate("/home?link-success=false");
     }
   });
   return (
