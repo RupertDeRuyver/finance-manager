@@ -3,38 +3,8 @@ import { Kysely, PostgresDialect, Generated, sql } from 'kysely'
 
 import {getAccountDetails} from "./bankAPI";
 import {log} from "./logging";
-
-interface Transaction {
-  transactionId: string
-  userId: number
-  name: string
-  date: Date
-  bookingDate?: Date
-  valueDate?: Date
-  amount: number
-  currency: string
-  creditorName?: string
-  creditorAccount?: string
-  debtorName?: string
-  debtorAccount?: string
-  remittanceInformationUnstructured?: string
-  manual: boolean
-  deleted?: boolean
-  description?: string
-  location?: string
-  postal_code?: string
-  country?: string
-  payment_method?: string
-}
-interface Database {
-    transactions: Transaction,
-    users: {
-      userId: Generated<Number>
-      name: string
-      account_id: string
-      requisition_id: string
-    }
-}
+import { generateMetadata } from './metadata';
+import type { Transaction, Database, GocardlessTransaction } from './types';
 
 export const db = new Kysely<Database>({
   dialect: 
@@ -100,7 +70,11 @@ export async function updateTransactions(userId: number): Promise<boolean> {
     log(`Error updating transactions for user ${userId}: Couldn't find account id`, 2)
     return false
   }
-  const json = await getAccountDetails(result.account_id, "transactions");
+  const json: {
+    transactions: {
+      booked: GocardlessTransaction[]
+    }
+  } = await getAccountDetails(result.account_id, "transactions");
   if (!json) {
     log(`Error updating transactions for user ${userId}: Didn't receive transactions`, 2)
     return false
@@ -108,11 +82,12 @@ export async function updateTransactions(userId: number): Promise<boolean> {
   log(`Succesfully received transactions for user ${userId}`, 5);
   let transactions: Transaction[] = [];
   for (const transaction of json.transactions.booked) {
+    const metadata = generateMetadata(transaction);
     let data: Transaction = {
       transactionId: transaction.transactionId,
       userId: userId,
-      name: "",
-      date: transaction.bookingDate,
+      name: metadata.name,
+      date: metadata.date,
       bookingDate: transaction.bookingDate,
       valueDate: transaction.valueDate,
       amount: transaction.transactionAmount.amount,
@@ -120,13 +95,12 @@ export async function updateTransactions(userId: number): Promise<boolean> {
       creditorName: transaction.creditorName,
       debtorName: transaction.debtorName,
       remittanceInformationUnstructured: transaction.remittanceInformationUnstructured,
-      manual: false
+      manual: false,
+      payment_method: metadata.payment_method,
+      country: metadata.country,
+      location: metadata.location,
+      postal_code: metadata.postal_code
     };
-    if (data.amount < 0) {
-      data.name = (data.creditorName || data.remittanceInformationUnstructured) as string;
-    } else {
-      data.name = (data.debtorName || data.remittanceInformationUnstructured) as string;
-    }
     if (transaction.creditorAccount) {
       data.creditorAccount = transaction.creditorAccount.iban;
     }
