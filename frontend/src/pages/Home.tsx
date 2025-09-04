@@ -52,6 +52,7 @@ function Home() {
               name={transaction.name}
               category="?"
               amount={transaction.amount}
+              description={transaction.remittanceInformationUnstructured}
             />
           );
         })}

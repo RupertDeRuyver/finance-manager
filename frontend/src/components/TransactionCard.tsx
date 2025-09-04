@@ -11,9 +11,10 @@ interface Props {
   name: string;
   category: string;
   amount: number;
+  description?: string;
 }
 
-function TransactionCard({ name, category, amount }: Props) {
+function TransactionCard({ name, category, amount, description }: Props) {
   return (
     <>
       <Accordion>
@@ -45,8 +46,7 @@ function TransactionCard({ name, category, amount }: Props) {
           </Container>
         </AccordionSummary>
         <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
+          <Typography>{description}</Typography>
         </AccordionDetails>
       </Accordion>
     </>
