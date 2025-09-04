@@ -6,7 +6,7 @@ import {log} from "./logging";
 
 interface Transaction {
   transactionId: string
-  userId: Number
+  userId: number
   name: string
   date: Date
   bookingDate?: Date
