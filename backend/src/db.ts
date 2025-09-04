@@ -11,7 +11,7 @@ interface Transaction {
   date: Date
   bookingDate?: Date
   valueDate?: Date
-  amount: Number
+  amount: number
   currency: string
   creditorName?: string
   creditorAccount?: string
@@ -108,22 +108,32 @@ export async function updateTransactions(userId: number): Promise<boolean> {
   log(`Succesfully received transactions for user ${userId}`, 5);
   let transactions: Transaction[] = [];
   for (const transaction of json.transactions.booked) {
-    transactions.push({
+    let data: Transaction = {
       transactionId: transaction.transactionId,
       userId: userId,
-      name: transaction.remittanceInformationUnstructured,
+      name: "",
       date: transaction.bookingDate,
       bookingDate: transaction.bookingDate,
       valueDate: transaction.valueDate,
-      amount: transaction.amount,
-      currency: transaction.currency,
+      amount: transaction.transactionAmount.amount,
+      currency: transaction.transactionAmount.currency,
       creditorName: transaction.creditorName,
-      creditorAccount: transaction.creditorAccount,
       debtorName: transaction.debtorName,
-      debtorAccount: transaction.debtorAccount,
       remittanceInformationUnstructured: transaction.remittanceInformationUnstructured,
       manual: false
-    });
+    };
+    if (data.amount < 0) {
+      data.name = (data.creditorName || data.remittanceInformationUnstructured) as string;
+    } else {
+      data.name = (data.debtorName || data.remittanceInformationUnstructured) as string;
+    }
+    if (transaction.creditorAccount) {
+      data.creditorAccount = transaction.creditorAccount.iban;
+    }
+    if (transaction.debtorAccount) {
+      data.debtorAccount = transaction.debtorAccount.iban;
+    }
+    transactions.push(data);
   }
   await db.insertInto("transactions").values(transactions).onConflict((oc) => oc.column("transactionId").doNothing()).execute()
   return true
