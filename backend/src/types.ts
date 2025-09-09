@@ -21,6 +21,8 @@ export interface Transaction {
   postal_code?: string | undefined
   country?: string | undefined
   payment_method?: string | undefined
+  category: string
+  subcategory: string
 }
 
 export interface Database {
@@ -65,10 +67,11 @@ export interface TransactionMetadata {
 
 export interface Subcategory {
     name: string
-    keywords: string[]
+    keywords?: string[]
 }
 
 export interface Category {
     name: string
-    subcategories: Subcategory[]
+    subcategories: Record<string, Subcategory>;
+    excludedFromTotal?: boolean
 }

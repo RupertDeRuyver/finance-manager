@@ -25,6 +25,8 @@ interface Transaction {
   postal_code?: string;
   country?: string;
   payment_method?: string;
+  category: string;
+  subcategory: string;
 }
 
 const BACKEND_URL = "http://localhost:3000";
@@ -45,12 +47,12 @@ function Home() {
   return (
     <>
       <TopBar />
-      <Container sx={{ mt: 2 }}>
+      <Container sx={{ mt: 2, mb: 10 }}>
         {transactions.map((transaction: Transaction) => {
           return (
             <TransactionCard
               name={transaction.name}
-              category="?"
+              category={`${transaction.category} (${transaction.subcategory})`}
               amount={transaction.amount}
               description={transaction.remittanceInformationUnstructured}
             />

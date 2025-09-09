@@ -1,5 +1,7 @@
 import { log } from "./logging";
-import { GocardlessTransaction, TransactionMetadata } from "./types";
+import { Category, GocardlessTransaction, Subcategory, Transaction, TransactionMetadata } from "./types";
+import rawCategories from '../json/categories.json';
+const categories: Record<string, Category> = rawCategories;
 
 const NAME_PATTERNS = [
     /(.*) ([A-Z]{2})([0-9]{0,4}) ([A-Za-z -]+) Betaling met (.*) via (.*) ([0-9]{2}-[0-9]{2}-[0-9]{4}) om ([0-9]{2}.[0-9]{2}) uur (.*)/,
@@ -122,4 +124,32 @@ function generateDate(date: string | undefined): Date | undefined { // generate 
 
 function generateDateTimeId(transactionId: string): Date | undefined { // forrmat date and time from info in transactionId
     return // TODO: implement this function
-} 
+}
+
+export function predictCategory(transaction: GocardlessTransaction): [string, string] {
+    for (const [category_id, category] of Object.entries(categories)) {
+        for (const [subcategory_id, subcategory] of Object.entries(category.subcategories)) {
+            if (!("keywords" in subcategory)) {continue} // Skip if subcategory has no keywords
+            for (const rawKeyword of subcategory.keywords) {
+                const keyword = rawKeyword.toLowerCase();
+                if (
+                    transaction.remittanceInformationUnstructured?.toLocaleLowerCase().includes(keyword)
+                    ||
+                    (
+                        transaction.transactionAmount.amount < 0 
+                        &&
+                        transaction.creditorName?.toLocaleLowerCase().includes(keyword))
+                    ||
+                    (
+                        transaction.transactionAmount.amount > 0
+                        &&
+                        transaction.debtorName?.toLocaleLowerCase().includes(keyword)
+                    )
+                ) {
+                    return [category_id, subcategory_id]
+                }
+            }
+        }
+    }
+    return ["unknown", "unknown"]
+}

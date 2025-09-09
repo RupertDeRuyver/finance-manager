@@ -1,0 +1,350 @@
+{
+    "mobility": {
+        "name": "Mobiliteit",
+        "subcategories": {
+            "parking": {
+                "name": "Parkeren",
+                "keywords": [
+                    "parking",
+                    "parkeren"
+                ]
+            },
+            "train": {
+                "name": "Trein",
+                "keywords": [
+                    "NMBS",
+                    "SNCB",
+                    "SNCF",
+                    "railrest",
+                    "eurostar"
+                ]
+            },
+            "bus": {
+                "name": "Bus",
+                "keywords": [
+                    "De Lijn"
+                ]
+            },
+            "gasoline": {
+                "name": "Tanken",
+                "keywords": [
+                    "Gabriels",
+                    "Dats",
+                    "Total",
+                    "benzine",
+                    "diesel"
+                ]
+            },
+            "taxi": {
+                "name": "Taxi",
+                "keywords": [
+                    "taxi",
+                    "uber",
+                    "ubr*",
+                    "bolt"
+                ]
+            }
+        }
+    },
+    "food": {
+        "name": "Eten",
+        "subcategories": {
+            "food": {
+                "name": "Eten",
+                "keywords": [
+                    "mc donalds",
+                    "kfc",
+                    "burger king",
+                    "frituur",
+                    "de gouden sate",
+                    "burgers & taco",
+                    "pizza",
+                    "campus schoonmeersen",
+                    "noene",
+                    "panos",
+                    "levis burgers"
+                ]
+            },
+            "restaurant": {
+                "name": "Restaurant",
+                "keywords": [
+                    "bistro",
+                    "wa fang cheng",
+                    "van eygen sarah"
+                ]
+            }
+        }
+    },
+    "bars": {
+        "name": "Café",
+        "subcategories": {
+            "bars": {
+                "name": "Café",
+                "keywords": [
+                    "de moor lennart",
+                    "hellekapelle",
+                    "cafe",
+                    "kaffee",
+                    "planchee",
+                    "morre filip",
+                    "de platte batterie"
+                ]
+            }
+        }
+    },
+    "freetime": {
+        "name": "Vrije Tijd",
+        "subcategories": {
+            "moeder-egmont": {
+                "name": "Moeder Egmont",
+                "keywords": [
+                    "Moeder Egmont"
+                ]
+            },
+            "sports": {
+                "name": "Sporten",
+                "keywords": [
+                    "zwembad",
+                    "aqua"
+                ]
+            },
+            "recreation-parks": {
+                "name": "Recreatieparken",
+                "keywords": [
+                    "paira daiza",
+                    "plopsa",
+                    "walibi"
+                ]
+            }
+        }
+    },
+    "scouts": {
+        "name": "Scouts",
+        "subcategories": {
+            "scouts": {
+                "name": "Scouts",
+                "keywords": [
+                    "scouts",
+                    "jin",
+                    "team bar",
+                    "de kim"
+                ]
+            }
+        }
+    },
+    "earnings": {
+        "name": "Inkomsten",
+        "subcategories": {
+            "paycheck": {
+                "name": "Loon",
+                "keywords": [
+                    "Adecco",
+                    "DIGITAL PAYROLL SERVICES"
+                ]
+            },
+            "allowance": {
+                "name": "Zakgeld",
+                "keywords": [
+                    "weekgeld"
+                ]
+            },
+            "deposits": {
+                "name": "Storting",
+                "keywords": [
+                    "Storting"
+                ]
+            },
+            "bonusses": {
+                "name": "Premies",
+                "keywords": [
+                    "Groeipakket",
+                    "FB Hoofdrekening"
+                ]
+            }
+        }
+    },
+    "groceries": {
+        "name": "Boodschappen",
+        "subcategories": {
+            "colruyt": {
+                "name": "Colruyt",
+                "keywords": [
+                    "Colruyt"
+                ]
+            },
+            "okay": {
+                "name": "Okay",
+                "keywords": [
+                    "Okay"
+                ]
+            },
+            "spar": {
+                "name": "Spar",
+                "keywords": [
+                    "Spar",
+                    "eurospar"
+                ]
+            },
+            "aldi": {
+                "name": "Aldi",
+                "keywords": [
+                    "Aldi"
+                ]
+            },
+            "delhaize": {
+                "name": "Delhaize",
+                "keywords": [
+                    "Delhaize"
+                ]
+            },
+            "albert-heijn": {
+                "name": "Albert Heijn",
+                "keywords": [
+                    "Albert Heijn"
+                ]
+            },
+            "carrefour": {
+                "name": "Carrefour",
+                "keywords": [
+                    "Carrefour",
+                    "CARREFCONTAC"
+                ]
+            },
+            "lidl": {
+                "name": "Lidl",
+                "keywords": [
+                    "Lidl"
+                ]
+            }
+        }
+    },
+    "shopping": {
+        "name": "Shopping",
+        "subcategories": {
+            "shopping": {
+                "name": "Shopping",
+                "keywords": [
+                    "bol.com",
+                    "coolblue",
+                    "paypal",
+                    "ava",
+                    "amazon",
+                    "aliexpress",
+                    "jo dieraert",
+                    "trafic",
+                    "action",
+                    "hema",
+                    "decathlon",
+                    "alternate",
+                    "azerty",
+                    "reichelt",
+                    "relay"
+                ]
+            }
+            
+        }
+    },
+    "clothing": {
+        "name": "Kleding",
+        "subcategories": {
+            "clothing": {
+                "name": "Kleding",
+                "keywords": [
+                    "zalando",
+                    "shein",
+                    "zeb",
+                    "jbc"
+                ]
+            }
+        }
+    },
+    "diy": {
+        "name": "Doe-Het-Zelf",
+        "subcategories": {
+            "gamma": {
+                "name": "Gamma",
+                "keywords": [
+                    "Gamma"
+                ]
+            },
+            "hubo": {
+                "name": "Hubo",
+                "keywords": [
+                    "Hubo"
+                ]
+            }
+        }
+    },
+    "internal": {
+        "name": "Eigen Rekeningen",
+        "excludedFromTotal": true,
+        "subcategories": {
+            "investing": {
+                "name": "Beleggen",
+                "keywords": [
+                    "bolero"
+                ]
+            },
+            "savings": {
+                "name": "Sparen"
+            },
+            "checking-account": {
+                "name": "Zichtrekening"
+            }
+        }
+    },
+    "home": {
+        "name": "Huis",
+        "subcategories": {
+            "telecom": {
+                "name": "Telecom",
+                "keywords": [
+                    "telenet"
+                ]
+            },
+            "utilities": {
+                "name": "EGW",
+                "keywords": [
+                    "farys",
+                    "eneco"
+                ]
+            },
+            "furniture": {
+                "name": "Meubels",
+                "keywords": [
+                    "ikea"
+                ]
+            },
+            "insurance": {
+                "name": "Verzekering",
+                "keywords": [
+                    "insurance"
+                ]
+            }
+        }
+    },
+    "subscriptions": {
+        "name": "Abonnementen",
+        "subcategories": {
+            "subscriptions": {
+                "name": "Abonnementen",
+                "keywords": [
+                    "Spotify",
+                    "Youtube",
+                    "iCloud",
+                    "Netflix",
+                    "Streamz",
+                    "Lastpass"
+                ]
+            }
+        }
+    },
+    "unknown": {
+        "name": "Onbekend",
+        "subcategories": {
+            "unknown": {
+                "name": "Onbekend"
+            }
+        }
+    }
+}
