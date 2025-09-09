@@ -30,7 +30,7 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
                 postal_code = match[3];
                 location = match[4];
                 payment_method = match[5] + " " + match[6];
-                date = new Date(match[7] + " " + match[8]);
+                date = customFormatDate(match[7], match[8]) ?? date;
             } else if (index == 2) { // Matches pattern 3
                 payment_method = match[2] + "+" + match[3];
                 date = new Date(match[4] + " " + match[5]);
@@ -44,7 +44,7 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
     if (transaction.transactionAmount.amount < 0 && transaction.creditorName) { // If amount is negative and transaction contains creditorName, take that as name
         log("Transaction negative and has creditorName, taking that as name", 5);
         name = transaction.creditorName;
-    } else if (transaction.debtorName) { // If amount is positive and transaction contains debtorName, take that as name
+    } else if (transaction.transactionAmount.amount > 0 && transaction.debtorName) { // If amount is positive and transaction contains debtorName, take that as name
         log("Transaction positive and has debtorName, taking that as name", 5);
         name = transaction.debtorName;
     }
@@ -57,4 +57,34 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
         location: location,
         postal_code: postal_code
     }
+}
+
+function customFormatDate(date: string | undefined, time: string | undefined): Date | undefined {
+    if (!date || !time) {
+        return
+    }
+
+    const split_date = date.split("-"); // [day, month, year]
+    const split_time = time.split("."); // [hour, seconds]
+
+    if (!split_date || !split_time || split_date.length !== 3 || split_time.length !== 2) {
+        log("Error in time format for transaction", 2);
+        return;
+    } // check if split was successful and if lenghts are correct
+
+    const [dayStr, monthStr, yearStr] = split_date;
+    const [hourStr, minuteStr] = split_time;
+
+    const day = parseInt(dayStr!, 10);
+    const month = parseInt(monthStr!, 10) - 1; // januari is 0
+    const year = parseInt(yearStr!, 10);
+    const hour = parseInt(hourStr!, 10);
+    const minute = parseInt(minuteStr!, 10);
+    
+    if ([day, month, year, hour, minute].some(isNaN)) {
+        log("Error while converting time parts to numbers for transaction", 2);
+        return;
+    } // check if converting to number failed somewhere
+
+    return new Date(year, month, day, hour, minute);
 }
