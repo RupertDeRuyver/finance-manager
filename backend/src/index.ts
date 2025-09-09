@@ -4,9 +4,10 @@ import express, { Request, Response } from "express";
 const app = express()
 import cors from "cors";
 
-import {updateAllTokens, getAvailableBanks, createRequisition, getRequisition, requisition_statuses} from "./bankAPI";
+import {updateAllTokens, getAvailableBanks, createRequisition, getRequisition, requisition_statuses, getAccountDetails} from "./bankAPI";
 import {db, prepareDB, updateTransactions} from "./db";
 import {endWithMessage, log} from "./logging";
+import { GocardlessTransaction } from "./types";
 
 app.use(cors({
   origin: process.env.FRONTEND_URL
@@ -75,17 +76,43 @@ app.get("/confirm-requisition", async (req, res) => {
 
 app.get("/update-transactions", async (req, res) => {
     log(`Received update transactions request from ${req.ip}`, 5);
-    const user_id = Number(req.query.user_id)
-    if (Number.isNaN(user_id)) {
+
+    const userId = Number(req.query.user_id)
+
+    // check if userId is a valid number
+    if (Number.isNaN(userId)) {
         endWithMessage("Didn't receive a valid user id", res, 400);
         return
     }
-    updateTransactions(user_id).then((success) => {
+
+    // check if userId exists in db
+    const result = await db.selectFrom("users").where("userId","=",userId).select("account_id").executeTakeFirst();
+    if (!result) {
+        endWithMessage(`Error updating transactions for user ${userId}: Couldn't find account id`, res, 400);
+        return
+    }
+
+    // get transaction for this user
+    const json: {
+        transactions: {
+            booked: GocardlessTransaction[]
+        }
+    } = await getAccountDetails(result.account_id, "transactions");
+
+    // check if received transaction successfully
+    if (!json) {
+        endWithMessage(`Error updating transactions for user ${userId}: Didn't receive transactions`, res, 500)
+        return
+    }
+    log(`Succesfully received transactions for user ${userId}`, 5);
+
+    // update transaction in db
+    updateTransactions(json.transactions.booked, userId).then((success) => {
         if (success) {
-            endWithMessage(`Succesfully updated all transactions for user with id ${user_id}`, res, 200, 5);
+            endWithMessage(`Succesfully updated all transactions for user with id ${userId}`, res, 200, 5);
             return
         } else {
-            endWithMessage(`Failed to update transactions for user with id ${user_id}`, res, 500, 2);
+            endWithMessage(`Failed to update transactions for user with id ${userId}`, res, 500);
             return
         }
     });

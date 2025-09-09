@@ -1,7 +1,6 @@
 import { Pool } from 'pg'
-import { Kysely, PostgresDialect, Generated, sql } from 'kysely'
+import { Kysely, PostgresDialect, sql } from 'kysely'
 
-import {getAccountDetails} from "./bankAPI";
 import {log} from "./logging";
 import { generateMetadata } from './metadata';
 import type { Transaction, Database, GocardlessTransaction } from './types';
@@ -63,25 +62,10 @@ export async function prepareDB(): Promise<boolean> {
   }
 }
 
-export async function updateTransactions(userId: number): Promise<boolean> {
+export async function updateTransactions(gocardless_transactions: GocardlessTransaction[], userId: number): Promise<boolean> {
   log("Updating transactions for user " + userId, 5);
-  const result = await db.selectFrom("users").where("userId","=",userId).select("account_id").executeTakeFirst();
-  if (!result) {
-    log(`Error updating transactions for user ${userId}: Couldn't find account id`, 2)
-    return false
-  }
-  const json: {
-    transactions: {
-      booked: GocardlessTransaction[]
-    }
-  } = await getAccountDetails(result.account_id, "transactions");
-  if (!json) {
-    log(`Error updating transactions for user ${userId}: Didn't receive transactions`, 2)
-    return false
-  }
-  log(`Succesfully received transactions for user ${userId}`, 5);
   let transactions: Transaction[] = [];
-  for (const transaction of json.transactions.booked) {
+  for (const transaction of gocardless_transactions) {
     const metadata = generateMetadata(transaction);
     let data: Transaction = {
       transactionId: transaction.transactionId,
