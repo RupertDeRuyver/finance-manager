@@ -109,6 +109,22 @@ app.get("/update-transactions", async (req, res) => {
     // update transaction in db
     updateTransactions(json.transactions.booked, userId).then((success) => {
         if (success) {
+            endWithMessage(`Succesfully updated all transactions for user with id ${userId}`, res, 200, 4);
+            return
+        } else {
+            endWithMessage(`Failed to update transactions for user with id ${userId}`, res, 500);
+            return
+        }
+    });
+})
+
+// DEBUG FUNCTION, REMOVE IN PRODUCTION
+app.use(express.json());
+app.post("/insert-transactions", (req, res) => {
+    log(`Received insert transactions request from ${req.ip}`, 4);
+    const userId = Number(req.query.user_id);
+    updateTransactions(req.body, userId).then((success) => {
+        if (success) {
             endWithMessage(`Succesfully updated all transactions for user with id ${userId}`, res, 200, 5);
             return
         } else {

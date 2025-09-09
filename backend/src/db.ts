@@ -91,8 +91,10 @@ export async function updateTransactions(gocardless_transactions: GocardlessTran
     if (transaction.debtorAccount) {
       data.debtorAccount = transaction.debtorAccount.iban;
     }
+    
     transactions.push(data);
   }
+  
   await db.insertInto("transactions").values(transactions).onConflict((oc) => oc.column("transactionId").doNothing()).execute()
   return true
 }

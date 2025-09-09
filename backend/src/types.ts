@@ -62,3 +62,13 @@ export interface TransactionMetadata {
     postal_code?: string | undefined
 
 }
+
+export interface Subcategory {
+    name: string
+    keywords: string[]
+}
+
+export interface Category {
+    name: string
+    subcategories: Subcategory[]
+}
