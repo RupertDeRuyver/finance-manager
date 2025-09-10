@@ -204,17 +204,13 @@ function generateDateTimeId(transactionId: string): Date | undefined { // genera
     return new Date(year, month, day, hour, minute, second);
 }
 
-function predictCategory(strings: (string | undefined)[]): [string, string] {
+export function predictCategory(strings: (string | undefined)[]): [string, string] {
     for (const [category_id, category] of Object.entries(categories)) {
         for (const [subcategory_id, subcategory] of Object.entries(category.subcategories)) {
             if (!("keywords" in subcategory)) {continue} // Skip if subcategory has no keywords
             for (const rawKeyword of subcategory.keywords) {
                 const keyword = rawKeyword.toLowerCase();
-                if (strings.some((string) => {
-                    if (string) {
-                        string.toLowerCase().includes(keyword);
-                    }
-                })) {
+                if (strings.some((string) => string?.toLowerCase().includes(keyword))) {
                     return [category_id, subcategory_id]
                 }
             }
