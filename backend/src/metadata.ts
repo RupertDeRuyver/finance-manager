@@ -169,7 +169,39 @@ function generateDate(date: string | undefined): Date | undefined { // generate 
 }
 
 function generateDateTimeId(transactionId: string): Date | undefined { // generate date and time from info in transactionId
-    return // TODO: implement this function
+    // Example: 2025-09-10-13.02.59.335432
+
+    const split_date = transactionId.split("-");
+
+    if (split_date.length !== 4) {
+        log("Error in date format for transaction", 2);
+        return;
+    } // check if split was successful and if lenghts are correct
+
+    const [yearStr, monthStr, dayStr] = split_date;
+
+    const split_time = split_date[3]!.split(".");
+
+    if (split_date.length !== 4) {
+        log("Error in time format for transaction", 2);
+        return;
+    } // check if split was successful and if lenghts are correct
+
+    const [hourStr, minuteStr, secondStr, _ID] = split_time;
+
+    const day = parseInt(dayStr!, 10);
+    const month = parseInt(monthStr!, 10) - 1; // januari is 0
+    const year = parseInt(yearStr!, 10);
+    const hour = parseInt(hourStr!, 10);
+    const minute = parseInt(minuteStr!, 10);
+    const second = parseInt(secondStr!, 10);
+
+    if ([day, month, year, hour, minute, second].some(isNaN)) {
+        log("Error while converting time parts to numbers for transaction", 2);
+        return;
+    } // check if converting to number failed somewhere
+
+    return new Date(year, month, day, hour, minute, second);
 }
 
 function predictCategory(strings: (string | undefined)[]): [string, string] {
