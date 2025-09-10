@@ -2,7 +2,7 @@ import { Pool } from 'pg'
 import { Kysely, PostgresDialect, sql } from 'kysely'
 
 import {log} from "./logging";
-import { generateMetadata, predictCategory } from './metadata';
+import { generateMetadata } from './metadata';
 import type { Transaction, Database, GocardlessTransaction } from './types';
 
 export const db = new Kysely<Database>({
@@ -45,6 +45,8 @@ export async function prepareDB(): Promise<boolean> {
       .addColumn("payment_method", "text")
       .addColumn("category", "text", (col) => col.notNull())
       .addColumn("subcategory", "text", (col) => col.notNull())
+      .addColumn("bic", "text")
+      .addColumn("comment", "text")
       .addPrimaryKeyConstraint("transactions_pkey", ["transactionId"])
       .execute();
 
@@ -69,7 +71,6 @@ export async function updateTransactions(gocardless_transactions: GocardlessTran
   let transactions: Transaction[] = [];
   for (const transaction of gocardless_transactions) {
     const metadata = generateMetadata(transaction);
-    const [category_id, subcategory_id] = predictCategory(transaction);
     let data: Transaction = {
       transactionId: transaction.transactionId,
       userId: userId,
@@ -87,8 +88,10 @@ export async function updateTransactions(gocardless_transactions: GocardlessTran
       country: metadata.country,
       location: metadata.location,
       postal_code: metadata.postal_code,
-      category: category_id,
-      subcategory: subcategory_id
+      category: metadata.category,
+      subcategory: metadata.subcategory,
+      bic: metadata.bic,
+      comment: metadata.comment
     };
     if (transaction.creditorAccount) {
       data.creditorAccount = transaction.creditorAccount.iban;

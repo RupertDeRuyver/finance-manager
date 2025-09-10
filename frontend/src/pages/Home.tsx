@@ -27,6 +27,8 @@ interface Transaction {
   payment_method?: string;
   category: string;
   subcategory: string;
+  bic: string;
+  comment: string;
 }
 
 const BACKEND_URL = "http://localhost:3000";
@@ -54,7 +56,27 @@ function Home() {
               name={transaction.name}
               category={`${transaction.category} (${transaction.subcategory})`}
               amount={transaction.amount}
-              description={transaction.remittanceInformationUnstructured}
+              description={`
+                ID: ${transaction.transactionId}\n
+                Date: ${transaction.date}\n
+                Booking Date: ${transaction.bookingDate}\n
+                Value Date: ${transaction.valueDate}\n
+                Currency: ${transaction.currency}\n
+                Creditor Name: ${transaction.creditorName}\n
+                Creditor Account: ${transaction.creditorAccount}\n
+                Debtor Name : ${transaction.debtorName}\n
+                Debtor Account: ${transaction.debtorAccount}\n
+                remittanceInformationUnstructured: ${transaction.remittanceInformationUnstructured}\n
+                Manual: ${transaction.manual}\n
+                Deleted: ${transaction.deleted}\n
+                Description: ${transaction.description}\n
+                Location: ${transaction.location}\n
+                Postal Code: ${transaction.postal_code}\n
+                Country: ${transaction.country}\n
+                Payment Method: ${transaction.payment_method}\n
+                BIC: ${transaction.bic}\n
+                Comment: ${transaction.comment}\n
+              `}
             />
           );
         })}

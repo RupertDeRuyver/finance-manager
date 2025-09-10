@@ -22,14 +22,10 @@ function TransactionCard({ name, category, amount, description }: Props) {
           <Container>
             <Grid container spacing={2}>
               <Grid size={2}>
-                <Typography align="center">
-                  {category}
-                </Typography>
+                <Typography align="center">{category}</Typography>
               </Grid>
               <Grid size={8}>
-                <Typography align="center">
-                  {name}
-                </Typography>
+                <Typography align="center">{name}</Typography>
               </Grid>
               <Grid size={2}>
                 {amount < 0 ? (
@@ -46,7 +42,14 @@ function TransactionCard({ name, category, amount, description }: Props) {
           </Container>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{description}</Typography>
+          <Typography>
+            {description?.split("\n").map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </Typography>
         </AccordionDetails>
       </Accordion>
     </>
