@@ -113,8 +113,6 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
 }
 
 function generateDateTime(date: string | undefined, time: string | undefined, reverseDate: boolean = false): Date | undefined { // generate date and time from format DD-MM-YYYY and HH:MM
-    console.log(date)
-    console.log(time)
     if (!date || !time) {
         return
     }
@@ -149,7 +147,7 @@ function generateDateTime(date: string | undefined, time: string | undefined, re
         log("Error while converting time parts to numbers for transaction", 2);
         return;
     } // check if converting to number failed somewhere
-    console.log( new Date(year, month, day, hour, minute));
+    
     return new Date(year, month, day, hour, minute);
 }
 
