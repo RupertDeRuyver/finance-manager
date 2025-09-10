@@ -65,7 +65,7 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
                 }
                 bic = match[4];
                 comment = match[5];
-                date = generateDateTime(transaction.bookingDate, match[6]) ?? date;
+                date = generateDateTime(transaction.bookingDate, match[6], true) ?? date;
 
             } else if (index == 7 || index == 8) { // Matches pattern 8 or 9
                 // [naam, (instant)overschrijving, IBAN, BIC, tijdstip, (extra text)]
@@ -75,7 +75,7 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
                     payment_method = match[2];
                 }
                 bic = match[4];
-                date = generateDateTime(transaction.bookingDate, match[5]) ?? date;
+                date = generateDateTime(transaction.bookingDate, match[5], true) ?? date;
 
             } else if (index == 9 || index == 10) { // Matches pattern 10 or 11
                 // [naam, (instant)overschrijving, IBAN, BIC, (opmerking)]
@@ -112,7 +112,9 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
     }
 }
 
-function generateDateTime(date: string | undefined, time: string | undefined): Date | undefined { // generate date and time from format DD-MM-YYYY and HH:MM
+function generateDateTime(date: string | undefined, time: string | undefined, reverseDate: boolean = false): Date | undefined { // generate date and time from format DD-MM-YYYY and HH:MM
+    console.log(date)
+    console.log(time)
     if (!date || !time) {
         return
     }
@@ -125,7 +127,16 @@ function generateDateTime(date: string | undefined, time: string | undefined): D
         return;
     } // check if split was successful and if lenghts are correct
 
-    const [dayStr, monthStr, yearStr] = split_date;
+    let yearStr: string | undefined;
+    let monthStr: string | undefined;
+    let dayStr: string | undefined;
+
+    if (reverseDate) {
+        [yearStr, monthStr, dayStr] = split_date;
+    } else {
+        [dayStr, monthStr, yearStr] = split_date;
+    }
+
     const [hourStr, minuteStr] = split_time;
 
     const day = parseInt(dayStr!, 10);
@@ -138,7 +149,7 @@ function generateDateTime(date: string | undefined, time: string | undefined): D
         log("Error while converting time parts to numbers for transaction", 2);
         return;
     } // check if converting to number failed somewhere
-    
+    console.log( new Date(year, month, day, hour, minute));
     return new Date(year, month, day, hour, minute);
 }
 
