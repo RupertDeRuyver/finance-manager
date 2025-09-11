@@ -141,7 +141,7 @@ app.get("/get-transactions", async (req, res) => {
         endWithMessage("Didn't receive a valid user id", res, 400);
         return
     }
-    db.selectFrom("transactions").where("userId","=",user_id).where("deleted","=",false).selectAll().execute().then((json) => {
+    db.selectFrom("transactions").where("userId","=",user_id).where("deleted","=",false).selectAll().orderBy("date", "desc").execute().then((json) => {
         res.json(json);
         log(`Succesfully returned transactions for user with id ${user_id} to ${req.ip}`,5);
     });

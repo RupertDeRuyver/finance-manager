@@ -6,15 +6,13 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import type { Transaction } from "../types";
 
 interface Props {
-  name: string;
-  category: string;
-  amount: number;
-  description?: string;
+  transaction: Transaction;
 }
 
-function TransactionCard({ name, category, amount, description }: Props) {
+function TransactionCard({ transaction }: Props) {
   return (
     <>
       <Accordion>
@@ -22,19 +20,19 @@ function TransactionCard({ name, category, amount, description }: Props) {
           <Container>
             <Grid container spacing={2}>
               <Grid size={2}>
-                <Typography align="center">{category}</Typography>
+                <Typography align="center">{transaction.date.toLocaleDateString()}</Typography>
               </Grid>
               <Grid size={8}>
-                <Typography align="center">{name}</Typography>
+                <Typography align="center">{transaction.name}</Typography>
               </Grid>
               <Grid size={2}>
-                {amount < 0 ? (
+                {transaction.amount < 0 ? (
                   <Typography align="center" color="error">
-                    -€{-amount}
+                    -€{-transaction.amount}
                   </Typography>
                 ) : (
                   <Typography align="center" color="success">
-                    +€{amount}
+                    +€{transaction.amount}
                   </Typography>
                 )}
               </Grid>
@@ -42,14 +40,7 @@ function TransactionCard({ name, category, amount, description }: Props) {
           </Container>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            {description?.split("\n").map((line, index) => (
-              <span key={index}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </Typography>
+          <Typography>{transaction.remittanceInformationUnstructured}</Typography>
         </AccordionDetails>
       </Accordion>
     </>
