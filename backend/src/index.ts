@@ -107,9 +107,9 @@ app.get("/update-transactions", async (req, res) => {
     log(`Succesfully received transactions for user ${userId}`, 5);
 
     // update transaction in db
-    updateTransactions(json.transactions.booked, userId).then((newTransactions) => {
-        if (newTransactions >= 0) {
-            endWithMessage(`Succesfully updated all transactions for user with id ${userId}, found ${newTransactions} new transactions`, res, 200, 4);
+    updateTransactions(json.transactions.booked, userId).then((success) => {
+        if (success) {
+            endWithMessage(`Succesfully updated all transactions for user with id ${userId}`, res, 200, 4);
             return
         } else {
             endWithMessage(`Failed to update transactions for user with id ${userId}`, res, 500);

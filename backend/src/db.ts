@@ -73,7 +73,7 @@ export async function prepareDB(): Promise<boolean> {
   }
 }
 
-export async function updateTransactions(gocardless_transactions: GocardlessTransaction[], userId: number): Promise<number> {
+export async function updateTransactions(gocardless_transactions: GocardlessTransaction[], userId: number): Promise<boolean> {
   log("Updating transactions for user " + userId, 5);
   let transactions: Transaction[] = [];
   for (const transaction of gocardless_transactions) {
@@ -111,5 +111,5 @@ export async function updateTransactions(gocardless_transactions: GocardlessTran
   }
 
   await db.insertInto("transactions").values(transactions).onConflict((oc) => oc.column("transactionId").doNothing()).execute()
-  return transactions.length;
+  return true;
 }
