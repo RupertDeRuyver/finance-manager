@@ -9,13 +9,13 @@ const NAME_PATTERNS = [
     /(.*) Betaling met (.*) via (.*) ([0-9]{2}-[0-9]{2}-[0-9]{4}) om ([0-9]{2}.[0-9]{2}) uur (.*)/,
     /(.*) Betaling met (.*) via (.*) ([0-9]{2}-[0-9]{2}-[0-9]{4}) (.*)/,
     /(.*) Domiciliëring (.*)/,
-    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*) ([0-9]{2}\.[0-9]{2}) uur (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking, tijdstip, extra text]
-    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*) ([0-9]{2}\.[0-9]{2}) uur$/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking, tijdstip]
-    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) ([0-9]{2}\.[0-9]{2}) uur (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, tijdstip, extra text]
-    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) ([0-9]{2}\.[0-9]{2}) uur$/, // [naam, (instant)overschrijving, IBAN, BIC, tijdstip]
-    /(.*) Instantoverschrijving ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) Wero .* Wero om ([0-9]{2}\.[0-9]{2})$/, // Wero: [naam, IBAN, BIC, tijdstip]
-    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking]
-    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?)$/, // [naam, (instant)overschrijving, IBAN, BIC]
+    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*) ([0-9]{2}\.[0-9]{2}) uur (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking, tijdstip, extra text]
+    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*) ([0-9]{2}\.[0-9]{2}) uur$/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking, tijdstip]
+    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) ([0-9]{2}\.[0-9]{2}) uur (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, tijdstip, extra text]
+    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) ([0-9]{2}\.[0-9]{2}) uur$/, // [naam, (instant)overschrijving, IBAN, BIC, tijdstip]
+    /(.*) Instantoverschrijving ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) Wero .* Wero om ([0-9]{2}\.[0-9]{2})$/, // Wero: [naam, IBAN, BIC, tijdstip]
+    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking]
+    /(.*) (Instantoverschrijving|Overschrijving) ([A-Z 0-9]{15,34}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?)$/, // [naam, (instant)overschrijving, IBAN, BIC]
 ];
 
 export function generateMetadata(transaction: GocardlessTransaction): TransactionMetadata {
@@ -56,6 +56,9 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
             } else if (index == 3) { // Matches pattern 4
                 payment_method = match[2] + " " + match[3];
                 date = generateDate(match[4]) ?? date;
+
+            } else if (index == 4) { // Matches pattern 5
+                payment_method = "Domiciliëring";
 
             } else if (index == 5 || index == 6) { // Matches pattern 6 or 7
                 // [naam, (instant)overschrijving, IBAN, BIC, opmerking, tijdstip, (extra text)]
