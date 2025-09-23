@@ -107,9 +107,9 @@ app.get("/update-transactions", async (req, res) => {
     log(`Succesfully received transactions for user ${userId}`, 5);
 
     // update transaction in db
-    updateTransactions(json.transactions.booked, userId).then((success) => {
-        if (success) {
-            endWithMessage(`Succesfully updated all transactions for user with id ${userId}`, res, 200, 4);
+    updateTransactions(json.transactions.booked, userId).then((newTransactions) => {
+        if (newTransactions >= 0) {
+            endWithMessage(`Succesfully updated all transactions for user with id ${userId}, found ${newTransactions} new transactions`, res, 200, 4);
             return
         } else {
             endWithMessage(`Failed to update transactions for user with id ${userId}`, res, 500);
@@ -147,14 +147,7 @@ app.get("/get-transactions", async (req, res) => {
     });
 })
 
-Promise.all([updateAllTokens(), prepareDB()]).then(([tokenUpdateSucces, prepareDbSuccess]) => {
-    if (!tokenUpdateSucces) {
-        log("Failed to update access and refresh token", 2);
-    }
-    if (!prepareDbSuccess) {
-        log("Failed to prepare database", 1);
-        process.exit(1);
-    }
+Promise.all([updateAllTokens(), prepareDB()]).then(() => {
     app.listen(3000, () => {
         log("Succesfully started backend!", 4);
     })

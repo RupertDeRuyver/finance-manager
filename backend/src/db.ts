@@ -5,6 +5,13 @@ import {log} from "./logging";
 import { generateMetadata } from './metadata';
 import type { Transaction, Database, GocardlessTransaction } from './types';
 
+//// Pre init checks
+// Checking env variables
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) {
+    log("No DATABASE_URL defined", 1);
+}
+
 export const db = new Kysely<Database>({
   dialect: 
     new PostgresDialect({
@@ -60,13 +67,13 @@ export async function prepareDB(): Promise<boolean> {
       .execute();
     log("Succesfully prepared database", 5);
     return true
-  } catch {
-    log("Failed to prepare database", 2);
+  } catch (error) {
+    log("Failed to prepare database: " + (error as Error).message, 1);
     return false
   }
 }
 
-export async function updateTransactions(gocardless_transactions: GocardlessTransaction[], userId: number): Promise<boolean> {
+export async function updateTransactions(gocardless_transactions: GocardlessTransaction[], userId: number): Promise<number> {
   log("Updating transactions for user " + userId, 5);
   let transactions: Transaction[] = [];
   for (const transaction of gocardless_transactions) {
@@ -102,7 +109,7 @@ export async function updateTransactions(gocardless_transactions: GocardlessTran
     
     transactions.push(data);
   }
-  
+
   await db.insertInto("transactions").values(transactions).onConflict((oc) => oc.column("transactionId").doNothing()).execute()
-  return true
+  return transactions.length;
 }

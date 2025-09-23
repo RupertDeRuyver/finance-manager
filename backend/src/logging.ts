@@ -13,7 +13,10 @@ type LogLevel = keyof typeof log_levels
 export function log(message: string, level: LogLevel) {
     if (LOG_LEVEL >= level) {
         const out = `[${log_levels[level]}] ${message}`;
-        if (level == 1 || level == 2) {
+        if (level == 1) {
+            console.error(out);
+            process.exit(1);
+        } else  if (level == 2) {
             console.error(out);
         } else if (level == 3) {
             console.warn(out);
@@ -26,8 +29,8 @@ export function log(message: string, level: LogLevel) {
 }
 
 export async function httpError(message: string, response: Response, errorLevel: LogLevel = 2, detailLevel: LogLevel = 5) {
-    log(`${message}: ${response.status} ${response.statusText} ${await response.text}`, errorLevel);
-    console.log(await response.json());
+    log(`${message}: ${response.status} ${response.statusText} ${response.text}`, errorLevel);
+    log(await response.json(), detailLevel);
 }
 
 export function endWithMessage(message: string, res: ExpressResponse, status: number, level: LogLevel = 2) {
@@ -36,8 +39,19 @@ export function endWithMessage(message: string, res: ExpressResponse, status: nu
 }
 
 // Setting log level
+let LOG_LEVEL: LogLevel;
 const ENV_LEVEL = process.env.LOG_LEVEL;
-const LOG_LEVEL = Number(ENV_LEVEL) || 5;
-if (!ENV_LEVEL) {
-  log("No log level set, defaulting to INFO", 3);
+
+if (ENV_LEVEL) { // LOG_LEVEL is set in .env
+
+    LOG_LEVEL = Number(ENV_LEVEL) as LogLevel;
+
+    if (Number.isNaN(LOG_LEVEL)) {
+        LOG_LEVEL = 4;
+        log(`Invalid LOG_LEVEL in .env: ${ENV_LEVEL}. Must be a number from 1 to 5. Defaulting to ${log_levels[LOG_LEVEL]}`, 2);
+    }
+    
+} else { // LOG_LEVEL is not set in .env
+    LOG_LEVEL = 4;
+    log(`No log level set, defaulting to ${log_levels[LOG_LEVEL]}`, 3);
 }

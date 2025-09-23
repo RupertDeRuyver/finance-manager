@@ -2,6 +2,22 @@ import {httpError, log} from "./logging";
 
 let access: string, refresh: string;
 
+//// Pre init checks
+// Checking env variables
+const SECRET_ID = process.env.SECRET_ID;
+const SECRET_KEY = process.env.SECRET_KEY;
+if (!SECRET_ID && !SECRET_KEY) {
+    log("No SECRET_ID and SECRET_KEY defined", 1);
+} else if (!SECRET_ID) {
+    log("No SECRET_ID defined", 1);
+} else if (!SECRET_KEY) {
+    log("No SECRET_KEY defined", 1);
+}
+const FRONTEND_URL = process.env.FRONTEND_URL;
+if (!FRONTEND_URL) {
+    log("No FRONTEND_URL defined", 1);
+}
+
 export const requisition_statuses = {
     "CR": "CREATED",
     "GC": "GIVING_CONSENT",
@@ -106,24 +122,4 @@ export async function getRequisition(requisition_id: string) {
 export async function getAccountDetails(account_id: string, type: "balances" | "details" | "transactions") {
     log("Fetching account details for " + account_id + " of type " + type, 5);
     return (await fetchGocardless(`https://bankaccountdata.gocardless.com/api/v2/accounts/${account_id}/${type}/`, "GET"));
-}
-
-//// Pre init checks
-// Checking env variables
-const SECRET_ID = process.env.SECRET_ID;
-const SECRET_KEY = process.env.SECRET_KEY;
-if (!SECRET_ID && !SECRET_KEY) {
-    log("No SECRET_ID and SECRET_KEY defined", 1)
-    process.exit(1);
-} else if (!SECRET_ID) {
-    log("No SECRET_ID defined", 1)
-    process.exit(1);
-} else if (!SECRET_KEY) {
-    log("No SECRET_KEY defined", 1)
-    process.exit(1);
-}
-const FRONTEND_URL = process.env.FRONTEND_URL;
-if (!FRONTEND_URL) {
-    log("No FRONTEND_URL defined", 1)
-    process.exit(1);
 }
