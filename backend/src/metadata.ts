@@ -13,9 +13,10 @@ const NAME_PATTERNS = [
     /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*) ([0-9]{2}\.[0-9]{2}) uur$/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking, tijdstip]
     /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) ([0-9]{2}\.[0-9]{2}) uur (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, tijdstip, extra text]
     /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) ([0-9]{2}\.[0-9]{2}) uur$/, // [naam, (instant)overschrijving, IBAN, BIC, tijdstip]
+    /(.*) Instantoverschrijving ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) Wero .* Wero om ([0-9]{2}\.[0-9]{2})$/, // Wero: [naam, IBAN, BIC, tijdstip]
     /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?) (.*)/, // [naam, (instant)overschrijving, IBAN, BIC, opmerking]
     /(.*) (Instantoverschrijving|Overschrijving) ([A-Z]{2}[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4}) BIC: ([A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?)$/, // [naam, (instant)overschrijving, IBAN, BIC]
-]
+];
 
 export function generateMetadata(transaction: GocardlessTransaction): TransactionMetadata {
     log(`Generating metadata for transaction with id ${transaction.transactionId}`,5)
@@ -77,7 +78,13 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
                 bic = match[4];
                 date = generateDateTime(transaction.bookingDate, match[5], true) ?? date;
 
-            } else if (index == 9 || index == 10) { // Matches pattern 10 or 11
+            } else if (index == 9) { // Matches pattern 10 (Wero)
+                // [naam, IBAN, BIC, tijdstip]
+                payment_method = "Wero"
+                bic = match[3]
+                date = generateDateTime(transaction.bookingDate, match[4], true) ?? date;
+
+            } else if (index == 10 || index == 11) { // Matches pattern 11 or 12
                 // [naam, (instant)overschrijving, IBAN, BIC, (opmerking)]
                 payment_method = match[2]
                 bic = match[4]
