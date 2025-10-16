@@ -62,7 +62,15 @@
                     "campus schoonmeersen",
                     "noene",
                     "panos",
-                    "levis burgers"
+                    "levis burgers",
+                    "durum",
+                    "pitta",
+                    "friet",
+                    "hamburger",
+                    "eten",
+                    "broodje",
+                    "oliebollen",
+                    "pasta"
                 ]
             },
             "restaurant": {
@@ -70,7 +78,9 @@
                 "keywords": [
                     "bistro",
                     "wa fang cheng",
-                    "van eygen sarah"
+                    "van eygen sarah",
+                    "social deal",
+                    "restaurant"
                 ]
             }
         }
@@ -87,7 +97,8 @@
                     "kaffee",
                     "planchee",
                     "morre filip",
-                    "de platte batterie"
+                    "de platte batterie",
+                    "de omgekeerde wereld"
                 ]
             }
         }
@@ -113,7 +124,14 @@
                 "keywords": [
                     "paira daiza",
                     "plopsa",
-                    "walibi"
+                    "walibi",
+                    "kermis"
+                ]
+            },
+            "ski": {
+                "name": "Ski",
+                "keywords": [
+                    "ski"
                 ]
             }
         }
@@ -127,7 +145,8 @@
                     "scouts",
                     "jin",
                     "team bar",
-                    "de kim"
+                    "de kim",
+                    "kimmeling"
                 ]
             }
         }
@@ -334,7 +353,21 @@
                     "iCloud",
                     "Netflix",
                     "Streamz",
-                    "Lastpass"
+                    "Lastpass",
+                    "regery"
+                ]
+            }
+        }
+    },
+    "school": {
+        "name": "School",
+        "subcategories": {
+            "school": {
+                "name": "School",
+                "keywords": [
+                    "school",
+                    "pearson",
+                    "universiteit"
                 ]
             }
         }
