@@ -1,4 +1,6 @@
 import { Generated } from "kysely"
+import { Category } from "./Entities/category"
+import { Place } from "./Entities/place"
 
 export interface Transaction {
   transactionId: string
@@ -61,22 +63,19 @@ export interface TransactionMetadata {
     name: string
     date: Date
     payment_method: string | undefined
-    country: string | undefined
-    location: string | undefined
-    postal_code: string | undefined
-    category: string
-    subcategory: string
+    location: Place | undefined
+    category: Category
     bic: string | undefined
     comment: string | undefined
 }
 
-export interface Subcategory {
+export interface SubcategoryType {
     name: string
     keywords?: string[]
 }
 
-export interface Category {
+export interface CategoryType {
     name: string
-    subcategories: Record<string, Subcategory>;
+    subcategories: Record<string, SubcategoryType>;
     excludedFromTotal?: boolean
 }

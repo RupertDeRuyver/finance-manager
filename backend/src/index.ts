@@ -4,13 +4,13 @@ import express, { Request, Response } from "express";
 const app = express()
 import cors from "cors";
 
-import {updateAllTokens, getAvailableBanks, createRequisition, getRequisition, requisition_statuses, getAccountDetails} from "./bankAPI";
-import {db, prepareDB, updateTransactions} from "./db";
-import {endWithMessage, log} from "./logging";
+import { updateAllTokens, getAvailableBanks, createRequisition, getRequisition, requisition_statuses, getAccountDetails } from "./bankAPI";
+import { db, prepareDB, updateTransactions } from "./dataSource";
+import { endWithMessage, log } from "./logging";
 import { GocardlessTransaction } from "./types";
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL
+    origin: process.env.FRONTEND_URL
 }));
 
 app.get('/available-banks', async (req: Request, res: Response) => {
@@ -68,7 +68,7 @@ app.get("/confirm-requisition", async (req, res) => {
             "name": "test",
             "requisition_id": req.query.requisition_id as string,
             "account_id": json.accounts[0]
-        }).execute().then(()  => {
+        }).execute().then(() => {
             endWithMessage("Succesfully confirmed requisition and linked account to user", res, 200, 4);
         })
     });
@@ -86,7 +86,7 @@ app.get("/update-transactions", async (req, res) => {
     }
 
     // check if userId exists in db
-    const result = await db.selectFrom("users").where("userId","=",userId).select("account_id").executeTakeFirst();
+    const result = await db.selectFrom("users").where("userId", "=", userId).select("account_id").executeTakeFirst();
     if (!result) {
         endWithMessage(`Error updating transactions for user ${userId}: Couldn't find account id`, res, 400);
         return
@@ -141,9 +141,9 @@ app.get("/get-transactions", async (req, res) => {
         endWithMessage("Didn't receive a valid user id", res, 400);
         return
     }
-    db.selectFrom("transactions").where("userId","=",user_id).where("deleted","=",false).selectAll().orderBy("date", "desc").execute().then((json) => {
+    db.selectFrom("transactions").where("userId", "=", user_id).where("deleted", "=", false).selectAll().orderBy("date", "desc").execute().then((json) => {
         res.json(json);
-        log(`Succesfully returned transactions for user with id ${user_id} to ${req.ip}`,5);
+        log(`Succesfully returned transactions for user with id ${user_id} to ${req.ip}`, 5);
     });
 })
 

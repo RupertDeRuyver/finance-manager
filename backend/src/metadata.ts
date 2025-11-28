@@ -1,7 +1,9 @@
 import { log } from "./logging";
-import { Category, GocardlessTransaction, Subcategory, Transaction, TransactionMetadata } from "./types";
+import { GocardlessTransaction, CategoryType, SubcategoryType, Transaction, TransactionMetadata } from "./types";
 import rawCategories from '../json/categories.json';
-const categories: Record<string, Category> = rawCategories;
+import { Category } from "./Entities/category";
+import { Place } from "./Entities/place";
+const categories: Record<string, CategoryType> = rawCategories;
 
 const NAME_PATTERNS = [
     /(.*) ([A-Z]{2})([0-9]{0,4}) ([A-Za-z -]+) Betaling met (.*) via (.*) ([0-9]{2}-[0-9]{2}-[0-9]{4}) om ([0-9]{2}.[0-9]{2}) uur (.*)/,
@@ -106,17 +108,12 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
         name = transaction.debtorName;
     }
 
-    const [category, subcategory] = predictCategory([name, comment]);
-
     return {
         name: name,
         date: date,
         payment_method: payment_method,
-        country: country,
-        location: location,
-        postal_code: postal_code,
-        category: category,
-        subcategory: subcategory,
+        location: location ? new Place(location!, country!, postal_code) : undefined,
+        category: predictCategory([name, comment]),
         bic: bic,
         comment: comment
     }
@@ -223,17 +220,17 @@ function generateDateTimeId(transactionId: string): Date | undefined { // genera
     return new Date(year, month, day, hour, minute, second);
 }
 
-export function predictCategory(strings: (string | undefined)[]): [string, string] {
+export function predictCategory(strings: (string | undefined)[]): Category {
     for (const [category_id, category] of Object.entries(categories)) {
         for (const [subcategory_id, subcategory] of Object.entries(category.subcategories)) {
             if (!("keywords" in subcategory)) {continue} // Skip if subcategory has no keywords
             for (const rawKeyword of subcategory.keywords) {
                 const keyword = rawKeyword.toLowerCase();
                 if (strings.some((string) => string?.toLowerCase().includes(keyword))) {
-                    return [category_id, subcategory_id]
+                    return new Category(category_id, subcategory_id);
                 }
             }
         }
     }
-    return ["unknown", "unknown"]
+    return new Category("unknown", "unknown");
 }
