@@ -1,14 +1,54 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
+}
+
+model Transaction {
+  id              Int      @id @default(autoincrement())
+  name            String
+  amount          Decimal
+  category        Category
+  date            DateTime
+  description     String?
+}
+
+model GocardlessTransaction {
+  transaction     Transaction
+  transactionId   Int
+  deleted         Boolean       @default(false)
+  bookingDate     DateTime
+  valueDate       DateTime
+  location        Location?
+  creditor        Account?
+  debtor          Account?
+  comment         String?
+  paymentMethod   String?
+  bic             String?
+  remittanceInformationUnstructured String?
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String
+  parent  Category?
+}
+
+model Location {
+  id          Int      @id @default(autoincrement())
+  place       String
+  postalCode  String?
+  countryCode String?
+}
+
+model Account {
+  id        Int      @id @default(autoincrement())
+  name      String
+  account   String?
 }
