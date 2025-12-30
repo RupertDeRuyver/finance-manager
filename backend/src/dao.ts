@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import { Category } from "./model/category";
+import { User } from './model/user';
 
 export class DAO {
 
@@ -113,6 +114,33 @@ export class DAO {
         } catch (err: any) {
             throw new DaoInitializationError(err);
         }
+    }
+
+    static getAllUsers(): Promise<User[]> {
+        if (!this.initialized) {throw new DaoNotInitializedError};
+        return this.pool.query(`
+            SELECT * FROM users;
+        `).then((result) => {
+            return result.rows.map((row) => {
+                return new User(
+                    row.id,
+                    row.name
+                )
+            })
+        });
+    }
+
+    static getUser(): Promise<User> {
+        if (!this.initialized) {throw new DaoNotInitializedError};
+        return this.pool.query(`
+            SELECT * FROM users;
+        `).then((result) => {
+            let row = result.rows[0]
+            return new User(
+                row.id,
+                row.name
+            )
+        });
     }
 
     static getSubcategories(category: Category): Category[] {
