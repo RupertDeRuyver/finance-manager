@@ -1,8 +1,8 @@
 import { log } from "./logging";
 import { GocardlessTransaction, CategoryType, SubcategoryType, Transaction, TransactionMetadata } from "./types";
 import rawCategories from '../json/categories.json';
-import { Category } from "./Entities/category";
-import { Place } from "./Entities/place";
+import { Category } from "./model/category";
+import { Location } from "./model/location";
 const categories: Record<string, CategoryType> = rawCategories;
 
 const NAME_PATTERNS = [
@@ -112,7 +112,7 @@ export function generateMetadata(transaction: GocardlessTransaction): Transactio
         name: name,
         date: date,
         payment_method: payment_method,
-        location: location ? new Place(location!, country!, postal_code) : undefined,
+        location: location ? new Location(location!, country!, postal_code) : undefined,
         category: predictCategory([name, comment]),
         bic: bic,
         comment: comment
